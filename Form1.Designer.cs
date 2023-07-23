@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             menuStrip1 = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             выходToolStripMenuItem = new ToolStripMenuItem();
@@ -156,7 +157,7 @@
             processGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             processGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             processGridView.BackgroundColor = SystemColors.Control;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
@@ -168,7 +169,7 @@
             processGridView.Columns.AddRange(new DataGridViewColumn[] { ProcessId, ProcessName, ProcessMemory, IsResponding });
             processGridView.ContextMenuStrip = contextMenuStrip1;
             processGridView.EnableHeadersVisualStyles = false;
-            processGridView.Location = new Point(0, 52);
+            processGridView.Location = new Point(-43, 52);
             processGridView.Name = "processGridView";
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = SystemColors.Control;
@@ -178,9 +179,11 @@
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             processGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            processGridView.RowsDefaultCellStyle = dataGridViewCellStyle3;
             processGridView.ScrollBars = ScrollBars.Vertical;
             processGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            processGridView.Size = new Size(780, 337);
+            processGridView.Size = new Size(836, 337);
             processGridView.TabIndex = 5;
             processGridView.MouseDown += processGridView_MouseDown;
             // 
@@ -208,7 +211,7 @@
             // IsResponding
             // 
             IsResponding.DataPropertyName = "IsResponding";
-            IsResponding.HeaderText = "Состояние";
+            IsResponding.HeaderText = "  Состояние";
             IsResponding.Name = "IsResponding";
             IsResponding.ReadOnly = true;
             // 

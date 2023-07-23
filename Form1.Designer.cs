@@ -31,8 +31,6 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             menuStrip1 = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             выходToolStripMenuItem = new ToolStripMenuItem();
@@ -45,15 +43,11 @@
             label1 = new Label();
             labelCount = new Label();
             timer2 = new System.Windows.Forms.Timer(components);
-            processGridView = new DataGridView();
-            ProcessId = new DataGridViewTextBoxColumn();
-            ProcessName = new DataGridViewTextBoxColumn();
-            ProcessMemory = new DataGridViewTextBoxColumn();
-            IsResponding = new DataGridViewTextBoxColumn();
+            processDataGridView = new DataGridView();
             menuStrip1.SuspendLayout();
             toolStrip1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)processGridView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)processDataGridView).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
@@ -119,14 +113,14 @@
             получитьИнформациюToolStripMenuItem.Name = "получитьИнформациюToolStripMenuItem";
             получитьИнформациюToolStripMenuItem.Size = new Size(207, 22);
             получитьИнформациюToolStripMenuItem.Text = "Получить информацию";
-            получитьИнформациюToolStripMenuItem.Click += получитьИнформациюToolStripMenuItem_Click;
+            получитьИнформациюToolStripMenuItem.Click += infoToolStripMenuItem_Click;
             // 
             // завершитьToolStripMenuItem
             // 
             завершитьToolStripMenuItem.Name = "завершитьToolStripMenuItem";
             завершитьToolStripMenuItem.Size = new Size(207, 22);
             завершитьToolStripMenuItem.Text = "Завершить";
-            завершитьToolStripMenuItem.Click += CloseToolStripMenuItem_Click;
+            завершитьToolStripMenuItem.Click += killToolStripMenuItem_Click;
             // 
             // label1
             // 
@@ -149,78 +143,42 @@
             // timer2
             // 
             timer2.Enabled = true;
-            timer2.Interval = 200;
+            timer2.Interval = 500;
             timer2.Tick += timer2_Tick;
             // 
-            // processGridView
+            // processDataGridView
             // 
-            processGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            processGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            processGridView.BackgroundColor = SystemColors.Control;
+            processDataGridView.AllowUserToDeleteRows = false;
+            processDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            processDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = null;
             dataGridViewCellStyle1.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle1.SelectionForeColor = Color.DarkBlue;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.WindowText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            processGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            processGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            processGridView.Columns.AddRange(new DataGridViewColumn[] { ProcessId, ProcessName, ProcessMemory, IsResponding });
-            processGridView.ContextMenuStrip = contextMenuStrip1;
-            processGridView.EnableHeadersVisualStyles = false;
-            processGridView.Location = new Point(-43, 52);
-            processGridView.Name = "processGridView";
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Control;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.MenuHighlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            processGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            processGridView.RowsDefaultCellStyle = dataGridViewCellStyle3;
-            processGridView.ScrollBars = ScrollBars.Vertical;
-            processGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            processGridView.Size = new Size(836, 337);
-            processGridView.TabIndex = 5;
-            processGridView.MouseDown += processGridView_MouseDown;
-            // 
-            // ProcessId
-            // 
-            ProcessId.DataPropertyName = "ProcessId";
-            ProcessId.HeaderText = "ID процесса";
-            ProcessId.Name = "ProcessId";
-            ProcessId.ReadOnly = true;
-            // 
-            // ProcessName
-            // 
-            ProcessName.DataPropertyName = "ProcessName";
-            ProcessName.HeaderText = "Название процесса";
-            ProcessName.Name = "ProcessName";
-            ProcessName.ReadOnly = true;
-            // 
-            // ProcessMemory
-            // 
-            ProcessMemory.DataPropertyName = "ProcessMemory";
-            ProcessMemory.HeaderText = "Обьем памяти, МБ";
-            ProcessMemory.Name = "ProcessMemory";
-            ProcessMemory.ReadOnly = true;
-            // 
-            // IsResponding
-            // 
-            IsResponding.DataPropertyName = "IsResponding";
-            IsResponding.HeaderText = "  Состояние";
-            IsResponding.Name = "IsResponding";
-            IsResponding.ReadOnly = true;
+            processDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            processDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            processDataGridView.ContextMenuStrip = contextMenuStrip1;
+            processDataGridView.EnableHeadersVisualStyles = false;
+            processDataGridView.Location = new Point(0, 52);
+            processDataGridView.Name = "processDataGridView";
+            processDataGridView.ReadOnly = true;
+            processDataGridView.RowTemplate.Height = 25;
+            processDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            processDataGridView.Size = new Size(780, 337);
+            processDataGridView.TabIndex = 5;
+            processDataGridView.MouseDown += processDataGridView_MouseDown;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(780, 416);
-            Controls.Add(processGridView);
+            Controls.Add(processDataGridView);
             Controls.Add(labelCount);
             Controls.Add(label1);
             Controls.Add(toolStrip1);
@@ -234,10 +192,12 @@
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)processGridView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)processDataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
+
+
 
         #endregion
 
@@ -254,10 +214,6 @@
         private Label labelCount;
         private System.Windows.Forms.Timer timer2;
         private ToolStripMenuItem завершитьДеревоПроцессовToolStripMenuItem;
-        private DataGridView processGridView;
-        private DataGridViewTextBoxColumn ProcessId;
-        private DataGridViewTextBoxColumn ProcessName;
-        private DataGridViewTextBoxColumn ProcessMemory;
-        private DataGridViewTextBoxColumn IsResponding;
+        private DataGridView processDataGridView;
     }
 }

@@ -5,14 +5,14 @@ using System.Diagnostics;
 using System.Management;
 using System.Text;
 using System.Windows.Forms;
+using TaskManager__Businescope_.Models;
 
 namespace TaskManager__Businescope_
 {
     public partial class Form1 : Form
     {
-        private List<Process> processList = new List<Process>();
+        List<Process> processList = new List<Process>();
         Thread gettingProcesses;
-
         List<ProcessForDisplaying> processToDisplay = new List<ProcessForDisplaying>();
 
         public Form1()
@@ -24,13 +24,20 @@ namespace TaskManager__Businescope_
         {
             gettingProcesses = new Thread(() =>
             {
-                GetProcceses();
-                FillListView();
-                GetCountOfProcess(processList);
+                lock (processList)
+                {
+                    processList.Clear();
+                    processList = BasicActions.ProccesData.GetProcessList();
 
+                    processToDisplay.Clear();
+                    processToDisplay = BasicActions.ProccesData.GetProcessForDisplayingList(processList);
+
+                    BeginInvoke(new Action(() => processDataGridView.DataSource = BasicActions.ProccesData.serializeProcessForDisplaying(processToDisplay)));
+                    BeginInvoke(new Action(() => labelCount.Text = BasicActions.ProccesData.GetCountOfProcess(processList)));
+                }
             });
             gettingProcesses.Start();
-            toolStripButtonStart.Enabled = false;
+
         }
 
         private void toolStripButtonStart_Click(object sender, EventArgs e)
@@ -47,66 +54,50 @@ namespace TaskManager__Businescope_
             timer2.Enabled = false;
         }
 
-        private void GetProcceses()
-        {
-            lock (processList)
-            {
-                processList.Clear();
-                processList = Process.GetProcesses().OrderBy(x => x.ProcessName).ToList();
-            }
-        }
 
-        private void GetCountOfProcess(List<Process> processList)
-        {
-            BeginInvoke(new Action(() =>
-            {
-                labelCount.Text = processList.Count.ToString();
-            }));
-        }
+        //private void FillListView()
+        //{
+        //    int positionIndex = processGridView.FirstDisplayedScrollingRowIndex;
+        //    int selectedPositionIndex = processGridView.CurrentCell.RowIndex;
+        //    BeginInvoke(new Action(() => processGridView.Rows.Clear()));
+        //    lock (processList)
+        //    {
+        //        foreach (Process process in processList)
 
-        private void FillListView()
-        {
-            int positionIndex = processGridView.FirstDisplayedScrollingRowIndex;
-            int selectedPositionIndex = processGridView.CurrentCell.RowIndex;
-            BeginInvoke(new Action(() => processGridView.Rows.Clear()));
-            lock (processList)
-            {
-                foreach (Process process in processList)
-
-                {
-                    //Рассмотреть вариант с использованием PerfomanceCounter:
-                    //PerformanceCounter counter = new PerformanceCounter();
-                    //counter.CategoryName = "Process";
-                    //counter.CounterName = "Working Set - Private";
-                    //counter.InstanceName = process.ProcessName;
-                    var memorySize = Convert.ToDouble(process.WorkingSet64) / (1024 * 1024);
-                    //var memorySize = Convert.ToDouble(counter.NextValue()) / (1024 * 1024);
-                    memorySize = Math.Round(memorySize, 2);
-                    ProcessForDisplaying item = new ProcessForDisplaying(
-                        process.Id,
-                        process.ProcessName.ToString(),
-                        memorySize,
-                        process.Responding == true ? "Responding" : "Not responding");
-                    BeginInvoke(new Action(() => processGridView.Rows.Add(item.GetRow())));
-                    //counter.Close();
-                    //counter.Dispose();
-                }
-                BeginInvoke(new Action(() =>
-                {
-                    processGridView.CurrentCell = processGridView.Rows[selectedPositionIndex].Cells[0];
-                    processGridView.FirstDisplayedScrollingRowIndex = positionIndex;
-                }));
-            }
-        }
+        //        {
+        //            //Рассмотреть вариант с использованием PerfomanceCounter:
+        //            //PerformanceCounter counter = new PerformanceCounter();
+        //            //counter.CategoryName = "Process";
+        //            //counter.CounterName = "Working Set - Private";
+        //            //counter.InstanceName = process.ProcessName;
+        //            var memorySize = Convert.ToDouble(process.WorkingSet64) / (1024 * 1024);
+        //            //var memorySize = Convert.ToDouble(counter.NextValue()) / (1024 * 1024);
+        //            memorySize = Math.Round(memorySize, 2);
+        //            ProcessForDisplaying item = new ProcessForDisplaying(
+        //                process.Id,
+        //                process.ProcessName.ToString(),
+        //                memorySize,
+        //                process.Responding == true ? "Responding" : "Not responding");
+        //            // BeginInvoke(new Action(() => processGridView.Rows.Add(item.GetRow())));
+        //            //counter.Close();
+        //            //counter.Dispose();
+        //        }
+        //BeginInvoke(new Action(() =>
+        //        {
+        //    processGridView.CurrentCell = processGridView.Rows[selectedPositionIndex].Cells[0];
+        //    processGridView.FirstDisplayedScrollingRowIndex = positionIndex;
+        //}));
+        //    }
+        //}
 
         private string GetInformation()
         {
             StringBuilder sb = new StringBuilder();
             try
             {
-                if (processGridView.SelectedCells != null)
+                if (processDataGridView.SelectedCells != null)
                 {
-                    Process process = processList.Where(x => x.Id.ToString() == processGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
+                    Process process = processList.Where(x => x.Id.ToString() == processDataGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
                     sb.Append($"ID процесса: {process.Id}\n");
                     sb.Append($"Название процесса: {process.ProcessName}\n");
                     sb.Append($"Время запуска: {process.StartTime}\n");
@@ -120,44 +111,88 @@ namespace TaskManager__Businescope_
         }
         private void KillProcess(Process process)
         {
+
             process.Kill();
             process.WaitForExit();
+            int positionIndex = 0;
+            int selectedPositionIndex = 0;
+            if (processDataGridView.FirstDisplayedScrollingRowIndex != -1)
+                positionIndex = processDataGridView.FirstDisplayedScrollingRowIndex;
+            if (processDataGridView.CurrentCell != null)
+                selectedPositionIndex = processDataGridView.CurrentCell.RowIndex;
+            if (!gettingProcesses.IsAlive)
+            {
+                gettingProcesses = new Thread(() =>
+                {
+                    lock (processToDisplay)
+                    {
+                        processList.Clear();
+                        processList = BasicActions.ProccesData.GetProcessList();
+
+                        processToDisplay.Clear();
+                        processToDisplay = BasicActions.ProccesData.GetProcessForDisplayingList(processList);
+                    }
+                });
+                gettingProcesses.IsBackground = true;
+                gettingProcesses.Start();
+            }
+            lock (processToDisplay)
+            {
+                processDataGridView.DataSource = BasicActions.ProccesData.serializeProcessForDisplaying(processToDisplay);
+                labelCount.Text = BasicActions.ProccesData.GetCountOfProcess(processList);
+            }
+            processDataGridView.CurrentCell = processDataGridView.Rows[selectedPositionIndex].Cells[0];
+            processDataGridView.FirstDisplayedScrollingRowIndex = positionIndex;
+
         }
+
+
         private void timer2_Tick(object sender, EventArgs e)
         {
-
-            GetProcceses();
-            FillListView();
-            GetCountOfProcess(processList);
-        }
-
-        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
+            int positionIndex = 0;
+            int selectedPositionIndex = 0;
+            if (processDataGridView.FirstDisplayedScrollingRowIndex != -1)
+                positionIndex = processDataGridView.FirstDisplayedScrollingRowIndex;
+            if (processDataGridView.CurrentCell != null)
+                selectedPositionIndex = processDataGridView.CurrentCell.RowIndex;
+            if (!gettingProcesses.IsAlive)
             {
-                if (processGridView.SelectedCells != null)
+                gettingProcesses = new Thread(() =>
                 {
-                    Process processToKill = processList.Where(x => x.Id.ToString() == processGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
-                    KillProcess(processToKill);
-                    GetProcceses();
-                    FillListView();
-                    GetCountOfProcess(processList);
-                }
+                    lock (processToDisplay)
+                    {
+                        processList.Clear();
+                        processList = BasicActions.ProccesData.GetProcessList();
+
+                        processToDisplay.Clear();
+                        processToDisplay = BasicActions.ProccesData.GetProcessForDisplayingList(processList);
+                    }
+                });
+                gettingProcesses.IsBackground = true;
+                gettingProcesses.Start();
             }
-            catch (Exception) { }
+            lock (processToDisplay)
+            {
+                processDataGridView.DataSource = BasicActions.ProccesData.serializeProcessForDisplaying(processToDisplay);
+                labelCount.Text = BasicActions.ProccesData.GetCountOfProcess(processList);
+            }
+            processDataGridView.CurrentCell = processDataGridView.Rows[selectedPositionIndex].Cells[0];
+            processDataGridView.FirstDisplayedScrollingRowIndex = positionIndex;
         }
 
-        private void processGridView_MouseDown(object sender, MouseEventArgs e)
+
+
+        private void processDataGridView_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                var hit = processGridView.HitTest(e.X, e.Y);
+                var hit = processDataGridView.HitTest(e.X, e.Y);
                 if (hit.RowIndex >= 0)
                 {
-                    processGridView.ClearSelection();
-                    processGridView.Rows[hit.RowIndex].Selected = true;
-                    contextMenuStrip1.Show(processGridView, e.Location);
-                    processGridView.CurrentCell = processGridView.Rows[hit.RowIndex].Cells[0];
+                    processDataGridView.ClearSelection();
+                    processDataGridView.Rows[hit.RowIndex].Selected = true;
+                    contextMenuStrip1.Show(processDataGridView, e.Location);
+                    processDataGridView.CurrentCell = processDataGridView.Rows[hit.RowIndex].Cells[0];
                 }
             }
         }
@@ -167,10 +202,35 @@ namespace TaskManager__Businescope_
             Application.Exit();
         }
 
-        private void получитьИнформациюToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show(GetInformation());
         }
 
+        private void killToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (processDataGridView.SelectedCells != null)
+                {
+                    Process processToKill = processList.Where(x => x.Id.ToString() == processDataGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
+                    KillProcess(processToKill);
+                    //надо будет запустить поток
+
+
+
+
+                }
+            }
+            catch (Exception) { }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+
+
+        }
     }
 }
+

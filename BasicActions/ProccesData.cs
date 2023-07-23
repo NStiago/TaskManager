@@ -13,7 +13,7 @@ namespace TaskManager__Businescope_.BasicActions
     {
         public static List<Process> GetProcessList()
         {
-            return Process.GetProcesses().OrderBy(x=>x.ProcessName).ToList();
+            return Process.GetProcesses().OrderByDescending(x=>x.WorkingSet64).ToList();
         }
 
         public static List<ProcessForDisplaying> GetProcessForDisplayingList(List<Process> processList)

@@ -148,6 +148,7 @@
             // 
             // processDataGridView
             // 
+            processDataGridView.AllowUserToAddRows = false;
             processDataGridView.AllowUserToDeleteRows = false;
             processDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             processDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;

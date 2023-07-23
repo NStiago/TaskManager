@@ -18,6 +18,7 @@ namespace TaskManager__Businescope_
         public Form1()
         {
             InitializeComponent();
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -37,7 +38,6 @@ namespace TaskManager__Businescope_
                 }
             });
             gettingProcesses.Start();
-
         }
 
         private void toolStripButtonStart_Click(object sender, EventArgs e)
@@ -54,42 +54,6 @@ namespace TaskManager__Businescope_
             timer2.Enabled = false;
         }
 
-
-        //private void FillListView()
-        //{
-        //    int positionIndex = processGridView.FirstDisplayedScrollingRowIndex;
-        //    int selectedPositionIndex = processGridView.CurrentCell.RowIndex;
-        //    BeginInvoke(new Action(() => processGridView.Rows.Clear()));
-        //    lock (processList)
-        //    {
-        //        foreach (Process process in processList)
-
-        //        {
-        //            //Рассмотреть вариант с использованием PerfomanceCounter:
-        //            //PerformanceCounter counter = new PerformanceCounter();
-        //            //counter.CategoryName = "Process";
-        //            //counter.CounterName = "Working Set - Private";
-        //            //counter.InstanceName = process.ProcessName;
-        //            var memorySize = Convert.ToDouble(process.WorkingSet64) / (1024 * 1024);
-        //            //var memorySize = Convert.ToDouble(counter.NextValue()) / (1024 * 1024);
-        //            memorySize = Math.Round(memorySize, 2);
-        //            ProcessForDisplaying item = new ProcessForDisplaying(
-        //                process.Id,
-        //                process.ProcessName.ToString(),
-        //                memorySize,
-        //                process.Responding == true ? "Responding" : "Not responding");
-        //            // BeginInvoke(new Action(() => processGridView.Rows.Add(item.GetRow())));
-        //            //counter.Close();
-        //            //counter.Dispose();
-        //        }
-        //BeginInvoke(new Action(() =>
-        //        {
-        //    processGridView.CurrentCell = processGridView.Rows[selectedPositionIndex].Cells[0];
-        //    processGridView.FirstDisplayedScrollingRowIndex = positionIndex;
-        //}));
-        //    }
-        //}
-
         private string GetInformation()
         {
             StringBuilder sb = new StringBuilder();
@@ -98,12 +62,14 @@ namespace TaskManager__Businescope_
                 if (processDataGridView.SelectedCells != null)
                 {
                     Process process = processList.Where(x => x.Id.ToString() == processDataGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
+
                     sb.Append($"ID процесса: {process.Id}\n");
                     sb.Append($"Название процесса: {process.ProcessName}\n");
-                    sb.Append($"Время запуска: {process.StartTime}\n");
                     sb.Append(process.Responding == true ? "Состояние: в работе\n" : "Состояние: не отвечает\n");
+                    sb.Append($"Время запуска: {process.StartTime}\n");
                     sb.Append($"Handle: {process.Handle}\n");
                     sb.Append($"Путь: {process.MainModule.FileName}\n");
+
                 }
             }
             catch (Exception) { }

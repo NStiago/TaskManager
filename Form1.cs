@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Management;
 using System.Text;
+using System.Windows.Forms;
 
 namespace TaskManager__Businescope_
 {
@@ -67,7 +68,7 @@ namespace TaskManager__Businescope_
         {
             int positionIndex = processGridView.FirstDisplayedScrollingRowIndex;
             int selectedPositionIndex = processGridView.CurrentCell.RowIndex;
-            BeginInvoke(new Action(() =>processGridView.Rows.Clear()));
+            BeginInvoke(new Action(() => processGridView.Rows.Clear()));
             lock (processList)
             {
                 foreach (Process process in processList)
@@ -146,6 +147,21 @@ namespace TaskManager__Businescope_
             catch (Exception) { }
         }
 
+        private void processGridView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var hit = processGridView.HitTest(e.X, e.Y);
+                if (hit.RowIndex >= 0)
+                {
+                    processGridView.ClearSelection();
+                    processGridView.Rows[hit.RowIndex].Selected = true;
+                    contextMenuStrip1.Show(processGridView, e.Location);
+                    processGridView.CurrentCell = processGridView.Rows[hit.RowIndex].Cells[0];
+                }
+            }
+        }
+
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -155,5 +171,6 @@ namespace TaskManager__Businescope_
         {
             MessageBox.Show(GetInformation());
         }
+
     }
 }

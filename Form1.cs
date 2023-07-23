@@ -10,8 +10,10 @@ namespace TaskManager__Businescope_
     public partial class Form1 : Form
     {
         private List<Process> processList = new List<Process>();
-        private List<Items> processesWithMemory = new List<Items>();
         Thread gettingProcesses;
+
+        List<ProcessForDisplaying> processToDisplay = new List<ProcessForDisplaying>();
+
         public Form1()
         {
             InitializeComponent();
@@ -19,31 +21,15 @@ namespace TaskManager__Businescope_
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            itemsBindingSource.DataSource = processesWithMemory;
-
-            //Thread gettingProcesses = new Thread(GetProcceses);
-            //gettingProcesses.Start();
-            //Thread fillingProcess = new Thread(FillListView);
-            //fillingProcess.Start();
-
             gettingProcesses = new Thread(() =>
             {
                 GetProcceses();
                 FillListView();
+                GetCountOfProcess(processList);
+
             });
             gettingProcesses.Start();
-
-
             toolStripButtonStart.Enabled = false;
-
-
-            //GetProcceses();
-            //FillListView();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
 
         private void toolStripButtonStart_Click(object sender, EventArgs e)
@@ -51,7 +37,6 @@ namespace TaskManager__Businescope_
             toolStripButtonStop.Enabled = true;
             toolStripButtonStart.Enabled = false;
             timer2.Enabled = true;
-
         }
 
         private void toolStripButtonStop_Click(object sender, EventArgs e)
@@ -59,8 +44,6 @@ namespace TaskManager__Businescope_
             toolStripButtonStart.Enabled = true;
             toolStripButtonStop.Enabled = false;
             timer2.Enabled = false;
-
-
         }
 
         private void GetProcceses()
@@ -70,71 +53,49 @@ namespace TaskManager__Businescope_
                 processList.Clear();
                 processList = Process.GetProcesses().OrderBy(x => x.ProcessName).ToList();
             }
+        }
+
+        private void GetCountOfProcess(List<Process> processList)
+        {
             BeginInvoke(new Action(() =>
             {
                 labelCount.Text = processList.Count.ToString();
             }));
-
         }
 
         private void FillListView()
         {
-
-
-            BeginInvoke(new Action(() =>
-            {
-                
-            }));
-
-            //int positionIndex = dataGridView1.FirstDisplayedScrollingRowIndex;
-            //int selectedPositionIndex = dataGridView1.CurrentCell.RowIndex;
-
-            //BeginInvoke(new Action(() =>
-            //{
-            //    dataGridView1.Rows.Clear();
-            //}));
-
+            int positionIndex = processGridView.FirstDisplayedScrollingRowIndex;
+            int selectedPositionIndex = processGridView.CurrentCell.RowIndex;
+            BeginInvoke(new Action(() =>processGridView.Rows.Clear()));
             lock (processList)
             {
                 foreach (Process process in processList)
 
                 {
-
+                    //Рассмотреть вариант с использованием PerfomanceCounter:
                     //PerformanceCounter counter = new PerformanceCounter();
                     //counter.CategoryName = "Process";
                     //counter.CounterName = "Working Set - Private";
                     //counter.InstanceName = process.ProcessName;
-                    //скорректировать вычисление занимаемой памяти
                     var memorySize = Convert.ToDouble(process.WorkingSet64) / (1024 * 1024);
                     //var memorySize = Convert.ToDouble(counter.NextValue()) / (1024 * 1024);
                     memorySize = Math.Round(memorySize, 2);
-
-                    
-
-
-                    Items item = new Items(process.Id, process.ProcessName.ToString(), memorySize, process.Responding == true ? "Responding" : "Not responding");
-                    //var rows = new string[] { process.ProcessName.ToString(), memorySize.ToString(), process.Responding == true ? "Responding" : "Not responding" };
-                    if (!itemsBindingSource.Contains(item))
-                    {
-                        BeginInvoke(new Action(() =>  itemsBindingSource.Add(item) ));
-                    }
-
-                    //BeginInvoke(new Action(() =>
-                    //{
-                    //    dataGridView1.Rows.Add(rows);
-                    //}));
+                    ProcessForDisplaying item = new ProcessForDisplaying(
+                        process.Id,
+                        process.ProcessName.ToString(),
+                        memorySize,
+                        process.Responding == true ? "Responding" : "Not responding");
+                    BeginInvoke(new Action(() => processGridView.Rows.Add(item.GetRow())));
                     //counter.Close();
                     //counter.Dispose();
                 }
-
-                
-                //BeginInvoke(new Action(() =>
-                //{
-                //    dataGridView1.CurrentCell = dataGridView1.Rows[selectedPositionIndex].Cells[0];
-                //    dataGridView1.FirstDisplayedScrollingRowIndex = positionIndex;
-                //}));
+                BeginInvoke(new Action(() =>
+                {
+                    processGridView.CurrentCell = processGridView.Rows[selectedPositionIndex].Cells[0];
+                    processGridView.FirstDisplayedScrollingRowIndex = positionIndex;
+                }));
             }
-
         }
 
         private string GetInformation()
@@ -142,9 +103,9 @@ namespace TaskManager__Businescope_
             StringBuilder sb = new StringBuilder();
             try
             {
-                if (processItemsDGV.SelectedCells != null)
+                if (processGridView.SelectedCells != null)
                 {
-                    Process process = processList.Where(x => x.ProcessName == processItemsDGV.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
+                    Process process = processList.Where(x => x.Id.ToString() == processGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
                     sb.Append($"ID процесса: {process.Id}\n");
                     sb.Append($"Название процесса: {process.ProcessName}\n");
                     sb.Append($"Время запуска: {process.StartTime}\n");
@@ -152,7 +113,6 @@ namespace TaskManager__Businescope_
                     sb.Append($"Handle: {process.Handle}\n");
                     sb.Append($"Путь: {process.MainModule.FileName}\n");
                 }
-
             }
             catch (Exception) { }
             return sb.ToString();
@@ -162,39 +122,25 @@ namespace TaskManager__Businescope_
             process.Kill();
             process.WaitForExit();
         }
-
-        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void timer2_Tick(object sender, EventArgs e)
         {
 
             GetProcceses();
             FillListView();
-
+            GetCountOfProcess(processList);
         }
 
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                if (processItemsDGV.SelectedCells != null)
+                if (processGridView.SelectedCells != null)
                 {
-                    Process processToKill = processList.Where(x => x.ProcessName == processItemsDGV.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
+                    Process processToKill = processList.Where(x => x.Id.ToString() == processGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
                     KillProcess(processToKill);
                     GetProcceses();
                     FillListView();
+                    GetCountOfProcess(processList);
                 }
             }
             catch (Exception) { }
@@ -208,11 +154,6 @@ namespace TaskManager__Businescope_
         private void получитьИнформациюToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show(GetInformation());
-        }
-
-        private void dataGridView1_CellContentClick_2(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }

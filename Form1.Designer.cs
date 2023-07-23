@@ -42,18 +42,15 @@
             label1 = new Label();
             labelCount = new Label();
             timer2 = new System.Windows.Forms.Timer(components);
-            bsItemsOfTaskManager = new BindingSource(components);
-            processItemsDGV = new DataGridView();
-            nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            memoryDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            isResponseDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            itemsBindingSource = new BindingSource(components);
+            processGridView = new DataGridView();
+            ProcessId = new DataGridViewTextBoxColumn();
+            ProcessName = new DataGridViewTextBoxColumn();
+            ProcessMemory = new DataGridViewTextBoxColumn();
+            IsResponding = new DataGridViewTextBoxColumn();
             menuStrip1.SuspendLayout();
             toolStrip1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bsItemsOfTaskManager).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)processItemsDGV).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)itemsBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)processGridView).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
@@ -64,7 +61,6 @@
             menuStrip1.Size = new Size(780, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
-            menuStrip1.ItemClicked += menuStrip1_ItemClicked;
             // 
             // файлToolStripMenuItem
             // 
@@ -137,7 +133,6 @@
             label1.Size = new Size(103, 15);
             label1.TabIndex = 3;
             label1.Text = "Всего процессов:";
-            label1.Click += label1_Click;
             // 
             // labelCount
             // 
@@ -154,54 +149,53 @@
             timer2.Interval = 200;
             timer2.Tick += timer2_Tick;
             // 
-            // processItemsDGV
+            // processGridView
             // 
-            processItemsDGV.AllowUserToAddRows = false;
-            processItemsDGV.AllowUserToDeleteRows = false;
-            processItemsDGV.AutoGenerateColumns = false;
-            processItemsDGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            processItemsDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            processItemsDGV.Columns.AddRange(new DataGridViewColumn[] { nameDataGridViewTextBoxColumn, memoryDataGridViewTextBoxColumn, isResponseDataGridViewTextBoxColumn });
-            processItemsDGV.DataSource = itemsBindingSource;
-            processItemsDGV.Location = new Point(0, 52);
-            processItemsDGV.Name = "processItemsDGV";
-            processItemsDGV.ReadOnly = true;
-            processItemsDGV.RowTemplate.Height = 25;
-            processItemsDGV.Size = new Size(768, 249);
-            processItemsDGV.TabIndex = 5;
-            processItemsDGV.CellContentClick += dataGridView1_CellContentClick_2;
+            processGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            processGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            processGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            processGridView.Columns.AddRange(new DataGridViewColumn[] { ProcessId, ProcessName, ProcessMemory, IsResponding });
+            processGridView.ContextMenuStrip = contextMenuStrip1;
+            processGridView.Location = new Point(0, 52);
+            processGridView.Name = "processGridView";
+            processGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            processGridView.Size = new Size(780, 337);
+            processGridView.TabIndex = 5;
             // 
-            // nameDataGridViewTextBoxColumn
+            // ProcessId
             // 
-            nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            nameDataGridViewTextBoxColumn.ReadOnly = true;
+            ProcessId.DataPropertyName = "ProcessId";
+            ProcessId.HeaderText = "ID процесса";
+            ProcessId.Name = "ProcessId";
+            ProcessId.ReadOnly = true;
             // 
-            // memoryDataGridViewTextBoxColumn
+            // ProcessName
             // 
-            memoryDataGridViewTextBoxColumn.DataPropertyName = "Memory";
-            memoryDataGridViewTextBoxColumn.HeaderText = "Memory";
-            memoryDataGridViewTextBoxColumn.Name = "memoryDataGridViewTextBoxColumn";
-            memoryDataGridViewTextBoxColumn.ReadOnly = true;
+            ProcessName.DataPropertyName = "ProcessName";
+            ProcessName.HeaderText = "Название процесса";
+            ProcessName.Name = "ProcessName";
+            ProcessName.ReadOnly = true;
             // 
-            // isResponseDataGridViewTextBoxColumn
+            // ProcessMemory
             // 
-            isResponseDataGridViewTextBoxColumn.DataPropertyName = "IsResponse";
-            isResponseDataGridViewTextBoxColumn.HeaderText = "IsResponse";
-            isResponseDataGridViewTextBoxColumn.Name = "isResponseDataGridViewTextBoxColumn";
-            isResponseDataGridViewTextBoxColumn.ReadOnly = true;
+            ProcessMemory.DataPropertyName = "ProcessMemory";
+            ProcessMemory.HeaderText = "Обьем памяти, МБ";
+            ProcessMemory.Name = "ProcessMemory";
+            ProcessMemory.ReadOnly = true;
             // 
-            // itemsBindingSource
+            // IsResponding
             // 
-            itemsBindingSource.DataSource = typeof(Items);
+            IsResponding.DataPropertyName = "IsResponding";
+            IsResponding.HeaderText = "Состояние";
+            IsResponding.Name = "IsResponding";
+            IsResponding.ReadOnly = true;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(780, 416);
-            Controls.Add(processItemsDGV);
+            Controls.Add(processGridView);
             Controls.Add(labelCount);
             Controls.Add(label1);
             Controls.Add(toolStrip1);
@@ -215,9 +209,7 @@
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)bsItemsOfTaskManager).EndInit();
-            ((System.ComponentModel.ISupportInitialize)processItemsDGV).EndInit();
-            ((System.ComponentModel.ISupportInitialize)itemsBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)processGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -237,11 +229,10 @@
         private Label labelCount;
         private System.Windows.Forms.Timer timer2;
         private ToolStripMenuItem завершитьДеревоПроцессовToolStripMenuItem;
-        private BindingSource bsItemsOfTaskManager;
-        private DataGridView processItemsDGV;
-        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn memoryDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn isResponseDataGridViewTextBoxColumn;
-        private BindingSource itemsBindingSource;
+        private DataGridView processGridView;
+        private DataGridViewTextBoxColumn ProcessId;
+        private DataGridViewTextBoxColumn ProcessName;
+        private DataGridViewTextBoxColumn ProcessMemory;
+        private DataGridViewTextBoxColumn IsResponding;
     }
 }

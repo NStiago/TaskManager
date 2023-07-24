@@ -56,7 +56,7 @@ namespace TaskManager__Businescope_.BasicActions
         //получение количества процессов
         public static string GetCountOfProcess(List<Process> processList)
         {
-                return processList.Count.ToString();
+            return processList.Count.ToString();
         }
 
         //формирование данных для processDataGridView

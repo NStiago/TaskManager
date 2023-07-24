@@ -1,0 +1,22 @@
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\TaskManager (Businescope).exe
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\TaskManager (Businescope).deps.json
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\TaskManager (Businescope).runtimeconfig.json
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\TaskManager (Businescope).dll
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\TaskManager (Businescope).pdb
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.AssemblyReference.cache
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager__Businescope_.Form1.resources
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.GenerateResource.cache
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).AssemblyInfoInputs.cache
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).AssemblyInfo.cs
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.CoreCompileInputs.cache
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).dll
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\refint\TaskManager (Businescope).dll
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).pdb
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).genruntimeconfig.cache
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\ref\TaskManager (Businescope).dll
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\System.Management.dll
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Management.dll
+D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.CopyComplete
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\NLog.dll
+D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\NLog.config

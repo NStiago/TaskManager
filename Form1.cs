@@ -10,7 +10,6 @@ using TaskManager__Businescope_.Models;
 
 namespace TaskManager__Businescope_
 {
-    //кастомная сортировка по кнопке
     public partial class Form1 : Form
     {
         //лист процессов

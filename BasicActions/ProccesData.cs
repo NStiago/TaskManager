@@ -33,6 +33,7 @@ namespace TaskManager__Businescope_.BasicActions
         #endregion
 
         //получение списка экемпляров класса для отображения на главной форме
+        //Расчет занимаемой памяти происходит методом WorkingSet64, однако можно было реализовать с помощью PerformanceCounter 
         public static List<ProcessForDisplaying> GetProcessForDisplayingList(List<Process> processList)
         {
             List <ProcessForDisplaying> returnList = new List <ProcessForDisplaying>();

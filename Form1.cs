@@ -1,3 +1,4 @@
+using NLog;
 using System;
 using System.ComponentModel;
 using System.Data;
@@ -9,11 +10,16 @@ using TaskManager__Businescope_.Models;
 
 namespace TaskManager__Businescope_
 {
+    //доработать скролл
+    //сравнить два листа
+    //рефактор нормальный
+    //кастомная сортировка по кнопке
     public partial class Form1 : Form
     {
         List<Process> processList = new List<Process>();
         Thread gettingProcesses;
         List<ProcessForDisplaying> processToDisplay = new List<ProcessForDisplaying>();
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public Form1()
         {
@@ -38,6 +44,7 @@ namespace TaskManager__Businescope_
                 }
             });
             gettingProcesses.Start();
+            logger.Info("Приложение запущено");
         }
 
         private void toolStripButtonStart_Click(object sender, EventArgs e)
@@ -45,6 +52,7 @@ namespace TaskManager__Businescope_
             toolStripButtonStop.Enabled = true;
             toolStripButtonStart.Enabled = false;
             timer2.Enabled = true;
+            logger.Info("Возобновление процесса получения информации о процессах");
         }
 
         private void toolStripButtonStop_Click(object sender, EventArgs e)
@@ -52,6 +60,7 @@ namespace TaskManager__Businescope_
             toolStripButtonStart.Enabled = true;
             toolStripButtonStop.Enabled = false;
             timer2.Enabled = false;
+            logger.Info("Приостановка процесса получения информации о процессах");
         }
 
         private string GetInformation()
@@ -64,12 +73,13 @@ namespace TaskManager__Businescope_
                     Process process = processList.Where(x => x.Id.ToString() == processDataGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
 
                     sb.Append($"ID процесса: {process.Id}\n");
+                    logger.Info($"Пользователем запрошена информация о процессе с ID: {process.Id}");
                     sb.Append($"Название процесса: {process.ProcessName}\n");
                     sb.Append(process.Responding == true ? "Состояние: в работе\n" : "Состояние: не отвечает\n");
                     sb.Append($"Время запуска: {process.StartTime}\n");
                     sb.Append($"Handle: {process.Handle}\n");
                     sb.Append($"Путь: {process.MainModule.FileName}\n");
-
+                    
                 }
             }
             catch (Exception) { }
@@ -127,6 +137,8 @@ namespace TaskManager__Businescope_
                 {
                     lock (processToDisplay)
                     {
+
+
                         processList.Clear();
                         processList = BasicActions.ProccesData.GetProcessList();
 
@@ -165,6 +177,7 @@ namespace TaskManager__Businescope_
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            logger.Info($"Приложение выключено");
             Application.Exit();
         }
 
@@ -181,12 +194,8 @@ namespace TaskManager__Businescope_
                 if (processDataGridView.SelectedCells != null)
                 {
                     Process processToKill = processList.Where(x => x.Id.ToString() == processDataGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
+                    logger.Info($"Пользователем отправлен запрос на остановку процесса с ID: {processToKill.Id}");
                     KillProcess(processToKill);
-                    //надо будет запустить поток
-
-
-
-
                 }
             }
             catch (Exception) { }

@@ -9,29 +9,30 @@ using TaskManager__Businescope_.Models;
 
 namespace TaskManager__Businescope_.BasicActions
 {
+    //вспомогательный класс с методами, для работы с данными о процессе
     public class ProccesData
     {
+        #region 
+        //блок методов для кастомной сортировки
         public static List<Process> GetSortetProcessListById()
         {
             return Process.GetProcesses().OrderBy(x=>x.Id).ToList();
-
         }
         public static List<Process> GetSortetProcessListByName()
         {
             return Process.GetProcesses().OrderBy(x => x.ProcessName).ToList();
-
         }
         public static List<Process> GetSortetProcessListByMemory()
         {
             return Process.GetProcesses().OrderByDescending(x => x.WorkingSet64).ToList();
-
         }
         public static List<Process> GetSortetProcessListByRespose()
         {
             return Process.GetProcesses().OrderBy(x => x.Responding).ToList();
-
         }
+        #endregion
 
+        //получение списка экемпляров класса для отображения на главной форме
         public static List<ProcessForDisplaying> GetProcessForDisplayingList(List<Process> processList)
         {
             List <ProcessForDisplaying> returnList = new List <ProcessForDisplaying>();
@@ -52,10 +53,13 @@ namespace TaskManager__Businescope_.BasicActions
             return returnList;
         }
 
+        //получение количества процессов
         public static string GetCountOfProcess(List<Process> processList)
         {
                 return processList.Count.ToString();
         }
+
+        //формирование данных для processDataGridView
         public static DataTable serializeProcessForDisplaying(List<ProcessForDisplaying> processes)
         {
             DataTable returnTable = new DataTable();

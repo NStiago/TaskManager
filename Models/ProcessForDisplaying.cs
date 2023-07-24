@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaskManager__Businescope_.Models
 {
+    //отображаемая на форме информация выделена в отдельный класс
     public class ProcessForDisplaying
     {
         public ProcessForDisplaying(int processId, string processName, double processMemory, string isResponding)

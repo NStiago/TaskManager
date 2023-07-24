@@ -11,9 +11,25 @@ namespace TaskManager__Businescope_.BasicActions
 {
     public class ProccesData
     {
-        public static List<Process> GetProcessList()
+        public static List<Process> GetSortetProcessListById()
         {
-            return Process.GetProcesses().OrderByDescending(x=>x.WorkingSet64).ToList();
+            return Process.GetProcesses().OrderBy(x=>x.Id).ToList();
+
+        }
+        public static List<Process> GetSortetProcessListByName()
+        {
+            return Process.GetProcesses().OrderBy(x => x.ProcessName).ToList();
+
+        }
+        public static List<Process> GetSortetProcessListByMemory()
+        {
+            return Process.GetProcesses().OrderByDescending(x => x.WorkingSet64).ToList();
+
+        }
+        public static List<Process> GetSortetProcessListByRespose()
+        {
+            return Process.GetProcesses().OrderBy(x => x.Responding).ToList();
+
         }
 
         public static List<ProcessForDisplaying> GetProcessForDisplayingList(List<Process> processList)
@@ -57,7 +73,6 @@ namespace TaskManager__Businescope_.BasicActions
                 row[3] = process.IsResponding;
                 returnTable.Rows.Add(row);
             }
-
             return returnTable;
         }
 

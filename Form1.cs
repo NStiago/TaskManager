@@ -10,16 +10,16 @@ using TaskManager__Businescope_.Models;
 
 namespace TaskManager__Businescope_
 {
-    //доработать скролл
-    //сравнить два листа
-    //рефактор нормальный
     //кастомная сортировка по кнопке
     public partial class Form1 : Form
     {
         List<Process> processList = new List<Process>();
-        Thread gettingProcesses;
+        Thread? gettingProcesses;
         List<ProcessForDisplaying> processToDisplay = new List<ProcessForDisplaying>();
+        List<ProcessForDisplaying> processToDisplayBeforeUpdate = new List<ProcessForDisplaying>();
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        delegate List<Process> GetProcesses();
+        GetProcesses GetProcessesWithSort = BasicActions.ProccesData.GetSortetProcessListByMemory;
 
         public Form1()
         {
@@ -34,12 +34,17 @@ namespace TaskManager__Businescope_
                 lock (processList)
                 {
                     processList.Clear();
-                    processList = BasicActions.ProccesData.GetProcessList();
+                    processList = GetProcessesWithSort();
 
                     processToDisplay.Clear();
                     processToDisplay = BasicActions.ProccesData.GetProcessForDisplayingList(processList);
 
-                    BeginInvoke(new Action(() => processDataGridView.DataSource = BasicActions.ProccesData.serializeProcessForDisplaying(processToDisplay)));
+                    BeginInvoke(new Action(() => 
+                    {
+                        processDataGridView.DataSource = new DataView(BasicActions.ProccesData.serializeProcessForDisplaying(processToDisplay));
+                        for(int i=0;i< processDataGridView.Columns.Count;i++)
+                           processDataGridView.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    }));
                     BeginInvoke(new Action(() => labelCount.Text = BasicActions.ProccesData.GetCountOfProcess(processList)));
                 }
             });
@@ -66,25 +71,37 @@ namespace TaskManager__Businescope_
         private string GetInformation()
         {
             StringBuilder sb = new StringBuilder();
-            try
-            {
-                if (processDataGridView.SelectedCells != null)
-                {
-                    Process process = processList.Where(x => x.Id.ToString() == processDataGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
 
-                    sb.Append($"ID процесса: {process.Id}\n");
-                    logger.Info($"Пользователем запрошена информация о процессе с ID: {process.Id}");
-                    sb.Append($"Название процесса: {process.ProcessName}\n");
-                    sb.Append(process.Responding == true ? "Состояние: в работе\n" : "Состояние: не отвечает\n");
-                    sb.Append($"Время запуска: {process.StartTime}\n");
-                    sb.Append($"Handle: {process.Handle}\n");
-                    sb.Append($"Путь: {process.MainModule.FileName}\n");
-                    
-                }
+            if (processDataGridView.SelectedCells != null)
+            {
+                string processId;
+                string processName;
+                string processResponding;
+                string processStartTime;
+                string processHandle;
+                string processPath;
+
+                Process process = processList.Where(x => x.Id.ToString() == processDataGridView.CurrentRow.Cells[0].Value.ToString()).ToList().FirstOrDefault();
+                try { processId = process.Id.ToString(); } catch(Exception) {processId = "Отказано в доступе"; }
+                try { processName = process.ProcessName.ToString(); } catch (Exception) {processName = "Отказано в доступе"; }
+                try { processResponding = process.Responding == true ? "Состояние: в работе\n" : "Состояние: не отвечает\n"; } catch (Exception) {processResponding = "Отказано в доступе\n"; }
+                try { processStartTime = process.StartTime.ToString(); } catch (Exception) { processStartTime = "Отказано в доступе"; }
+                try { processHandle = process.Handle.ToString(); } catch (Exception) { processHandle = "Отказано в доступе"; }
+                try { processPath = process.MainModule.FileName.ToString(); } catch (Exception) { processPath = "Отказано в доступе"; }
+
+                logger.Info($"Пользователем запрошена информация о процессе с ID: {process.Id}");
+
+                sb.Append($"ID процесса: " + processId+"\n");
+                sb.Append($"Название процесса: " + processName + "\n");
+                sb.Append(processResponding);
+                sb.Append($"Время запуска: " + processStartTime + "\n");
+                sb.Append($"Handle: " + processHandle + "\n");
+                sb.Append($"Путь: " + processPath + "\n");
+
             }
-            catch (Exception) { }
             return sb.ToString();
         }
+
         private void KillProcess(Process process)
         {
 
@@ -103,10 +120,11 @@ namespace TaskManager__Businescope_
                     lock (processToDisplay)
                     {
                         processList.Clear();
-                        processList = BasicActions.ProccesData.GetProcessList();
+                        processList = GetProcessesWithSort();
 
                         processToDisplay.Clear();
                         processToDisplay = BasicActions.ProccesData.GetProcessForDisplayingList(processList);
+
                     }
                 });
                 gettingProcesses.IsBackground = true;
@@ -137,13 +155,26 @@ namespace TaskManager__Businescope_
                 {
                     lock (processToDisplay)
                     {
-
-
                         processList.Clear();
-                        processList = BasicActions.ProccesData.GetProcessList();
+                        processList = GetProcessesWithSort();
+
+                        processToDisplayBeforeUpdate.Clear();
+                        processToDisplayBeforeUpdate.AddRange(processToDisplay);
 
                         processToDisplay.Clear();
                         processToDisplay = BasicActions.ProccesData.GetProcessForDisplayingList(processList);
+
+                        foreach (var process in processToDisplay)
+                        {
+                            if (!processToDisplayBeforeUpdate.Any(x => x.ProcessId == process.ProcessId))
+                                logger.Info($"В системе запущен процесс {process.ProcessName} c ID: {process.ProcessId}");
+                        }
+
+                        foreach (var process in processToDisplayBeforeUpdate)
+                        {
+                            if (!processToDisplay.Any(x => x.ProcessId == process.ProcessId))
+                                logger.Info($"В системе остановлен процесс {process.ProcessName} c ID: {process.ProcessId}");
+                        }
                     }
                 });
                 gettingProcesses.IsBackground = true;
@@ -151,7 +182,8 @@ namespace TaskManager__Businescope_
             }
             lock (processToDisplay)
             {
-                processDataGridView.DataSource = BasicActions.ProccesData.serializeProcessForDisplaying(processToDisplay);
+
+                processDataGridView.DataSource = new DataView(BasicActions.ProccesData.serializeProcessForDisplaying(processToDisplay));
                 labelCount.Text = BasicActions.ProccesData.GetCountOfProcess(processList);
             }
             processDataGridView.CurrentCell = processDataGridView.Rows[selectedPositionIndex].Cells[0];
@@ -201,10 +233,34 @@ namespace TaskManager__Businescope_
             catch (Exception) { }
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
+            logger.Info($"Приложение выключено");
+        }
 
-
+        //реализация кастомной сортировки
+        private void processDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            var columnIndex=e.ColumnIndex;
+            switch(columnIndex)
+            {
+                case 0:
+                    GetProcessesWithSort = BasicActions.ProccesData.GetSortetProcessListById;
+                    logger.Info("Пользователь произвел сортировку по ID");
+                    break;
+                case 1:
+                    GetProcessesWithSort = BasicActions.ProccesData.GetSortetProcessListByName;
+                    logger.Info("Пользователь произвел сортировку по названию процесса");
+                    break;
+                case 2:
+                    GetProcessesWithSort = BasicActions.ProccesData.GetSortetProcessListByMemory;
+                    logger.Info("Пользователь произвел сортировку по занимаемой процессом памяти");
+                    break;
+                case 3:
+                    GetProcessesWithSort = BasicActions.ProccesData.GetSortetProcessListByRespose;
+                    logger.Info("Пользователь произвел сортировку по состоянию процесса");
+                    break;
+            }
         }
     }
 }

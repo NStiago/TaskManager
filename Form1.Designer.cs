@@ -172,6 +172,7 @@
             processDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             processDataGridView.Size = new Size(780, 337);
             processDataGridView.TabIndex = 5;
+            processDataGridView.ColumnHeaderMouseClick += processDataGridView_ColumnHeaderMouseClick;
             processDataGridView.MouseDown += processDataGridView_MouseDown;
             // 
             // Form1
@@ -187,6 +188,7 @@
             MainMenuStrip = menuStrip1;
             Name = "Form1";
             Text = "Task Manager (Businescope)";
+            FormClosing += Form1_Closing;
             Load += Form1_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();

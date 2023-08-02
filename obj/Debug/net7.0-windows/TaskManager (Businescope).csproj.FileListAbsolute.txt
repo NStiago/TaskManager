@@ -20,3 +20,25 @@ D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\runtime
 D:\Projects\TestTasks\TaskManager (Businescope)\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.CopyComplete
 D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\NLog.dll
 D:\Projects\TestTasks\TaskManager (Businescope)\bin\Debug\net7.0-windows\NLog.config
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\TaskManager (Businescope).exe
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\NLog.config
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\TaskManager (Businescope).deps.json
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\TaskManager (Businescope).runtimeconfig.json
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\TaskManager (Businescope).dll
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\TaskManager (Businescope).pdb
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\NLog.dll
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\System.Management.dll
+C:\Users\Sementiago\Source\Repos\TaskManager2\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Management.dll
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.AssemblyReference.cache
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager__Businescope_.Form1.resources
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.GenerateResource.cache
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).AssemblyInfoInputs.cache
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).AssemblyInfo.cs
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.CoreCompileInputs.cache
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).csproj.CopyComplete
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).dll
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\refint\TaskManager (Businescope).dll
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).pdb
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\TaskManager (Businescope).genruntimeconfig.cache
+C:\Users\Sementiago\Source\Repos\TaskManager2\obj\Debug\net7.0-windows\ref\TaskManager (Businescope).dll

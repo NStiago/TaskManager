@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\TestTasks\\TaskManager (Businescope)\\TaskManager (Businescope).csproj": {}
+    "C:\\Users\\Sementiago\\Source\\Repos\\TaskManager2\\TaskManager (Businescope).csproj": {}
   },
   "projects": {
-    "D:\\Projects\\TestTasks\\TaskManager (Businescope)\\TaskManager (Businescope).csproj": {
+    "C:\\Users\\Sementiago\\Source\\Repos\\TaskManager2\\TaskManager (Businescope).csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\TestTasks\\TaskManager (Businescope)\\TaskManager (Businescope).csproj",
+        "projectUniqueName": "C:\\Users\\Sementiago\\Source\\Repos\\TaskManager2\\TaskManager (Businescope).csproj",
         "projectName": "TaskManager (Businescope)",
-        "projectPath": "D:\\Projects\\TestTasks\\TaskManager (Businescope)\\TaskManager (Businescope).csproj",
+        "projectPath": "C:\\Users\\Sementiago\\Source\\Repos\\TaskManager2\\TaskManager (Businescope).csproj",
         "packagesPath": "C:\\Users\\Sementiago\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\TestTasks\\TaskManager (Businescope)\\obj\\",
+        "outputPath": "C:\\Users\\Sementiago\\Source\\Repos\\TaskManager2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

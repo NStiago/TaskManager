@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3LDsgP9nMZp/PmoHOMjYypDM/49RW7xHHmDqNBQQ1BVIMvZ6UQD6mHhNOpSS9Op/ZkucK9hc4EAnIYVdsAsT0g==",
+  "dgSpecHash": "QgGRzfiIJ2qZabIYpmlvkE3zejppkA4MJRK4DKInrl1nny7sxgYKGcK6VBIHUAyNHGgxOa/uUq00TOVU7mJlOQ==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\TestTasks\\TaskManager (Businescope)\\TaskManager (Businescope).csproj",
+  "projectFilePath": "C:\\Users\\Sementiago\\Source\\Repos\\TaskManager2\\TaskManager (Businescope).csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Sementiago\\.nuget\\packages\\nlog\\5.2.2\\nlog.5.2.2.nupkg.sha512",
     "C:\\Users\\Sementiago\\.nuget\\packages\\nlog.schema\\5.2.2\\nlog.schema.5.2.2.nupkg.sha512",
